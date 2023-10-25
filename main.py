@@ -14,14 +14,14 @@ def choose_html_file():
 
 # Function to skip appending question/answer to Excel file as it is unnecessary
 def skip_questions(question):
-    questions_to_skip = ['First name hidden', 'Surname hidden', 'Client email hidden', 'CID', ]
+    questions_to_skip = ['First name hidden', 'Surname hidden', 'Client email hidden', 'ID-Number', ]
     if question in questions_to_skip:
         return True
 
 
 # Function to append Personal Information before the initial data
 def personal_information(question):
-    question_value = "Tax Year"
+    question_value = "Year"
     if question in question_value:
         row_personal_info = ["Personal", "Information"]
         return row_personal_info
@@ -29,7 +29,7 @@ def personal_information(question):
 
 # Function to append a blank row, Residency Information and a row for residency status before the residency data
 def residency_information(question):
-    question_value = 'Have you been outside Ireland for the last 4 years?'
+    question_value = 'Have you lived outside of the country in the last 3 years?'
     if question == question_value:
         blank_row = ['', '']
         resident_info = ["Residency", "Information"]
@@ -37,30 +37,30 @@ def residency_information(question):
         return [blank_row, resident_info, residency_info]
 
 
-# Function to append a blank row and PAYE Income before the PAYE data
-def paye_information(question):
-    question_value = 'How many sources of employment income (including occupational pension) did you have?'
+# Function to append a blank row and Employment Income before the Employment data
+def employment_information(question):
+    question_value = 'How many employers did you have?'
     if question == question_value:
         blank_row = ['', '']
-        paye_info = ['PAYE', 'Income']
-        return [blank_row, paye_info]
+        employment_info = ['Employment', 'Income']
+        return [blank_row, employment_info]
 
 
 # Function to append a blank row and Self-Assessed Income before the SA data
 def sa_information(question):
-    question_value = 'Did you have any sources of non-employment income (such as rental income, self-employment income, subcontracting or other non-PAYE income)?'
+    question_value = 'Did you have any additional sources of income?'
     if question == question_value:
         blank_row = ['', '']
         sa_info = ['Self-Assessed', 'Income']
         return [blank_row, sa_info]
 
 
-# Function to append a blank row and Tax Credits and Expenses before the Expenses data
-def tcs_expenses_information(question):
-    question_value = 'Did you pay rent for your children’s accommodation while they were at college during 2022?'
+# Function to append a blank row and Personal Expenses before the Expenses data
+def expenses_information(question):
+    question_value = 'Did you pay rent during the tax year?'
     if question == question_value:
         blank_row = ['', '']
-        tcs_info = ['Tax Credits', 'and Expenses']
+        tcs_info = ['Personal', 'Expenses']
         return [blank_row, tcs_info]
 
 
@@ -131,12 +131,12 @@ def process_html_to_excel():
                                     cell.font = bold_font
                                     cell.fill = light_blue_fill
 
-                paye_func = paye_information(question_text)
+                paye_func = employment_information(question_text)
                 if paye_func is not None:
                     for each_value in paye_func:
                         worksheet.append(each_value)
 
-                        if each_value == ['PAYE', 'Income']:
+                        if each_value == ['Employment', 'Income']:
                             for cell in worksheet.iter_rows(min_row=worksheet.max_row, max_row=worksheet.max_row,
                                                             min_col=1,
                                                             max_col=len(paye_func)):
@@ -159,12 +159,12 @@ def process_html_to_excel():
                                     cell.font = bold_font
                                     cell.fill = light_blue_fill
 
-                tcs_func = tcs_expenses_information(question_text)
+                tcs_func = expenses_information(question_text)
                 if tcs_func is not None:
                     for each_value in tcs_func:
                         worksheet.append(each_value)
 
-                        if each_value == ['Tax Credits', 'and Expenses']:
+                        if each_value == ['Personal', 'Expenses']:
                             for cell in worksheet.iter_rows(min_row=worksheet.max_row, max_row=worksheet.max_row,
                                                             min_col=1,
                                                             max_col=len(tcs_func)):
